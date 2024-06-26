@@ -30,7 +30,7 @@
 
 </ul>
 <section >
-<img alt="background" src="../program language/image/Programming-amico.svg " />
+<img alt="background" src="../porgramming/image/istockphoto-1460275725-1024x1024.jpg " />
 </section>
 
 </body>

@@ -8,7 +8,7 @@
   <link rel="icon" href="../"/>
     <meta charset="UTF-8" />
    <meta name="تسجيل دخول " content="دخول لأشخاص المسجلين في الصفحة"/ >
-   <link rel="stylesheet" href="../program language/css/stylenew.css">
+   <link rel="stylesheet" href="../porgramming/css/stylenew.css">
       <link rel="stylesheet" href="css\stylenew.css">
     <title>login</title>
   </head> 
@@ -16,8 +16,8 @@
    
     <main >
     <div class="container">
-   <p> <form action="cheaklogin.php" method="post"  > 
-   <h2>porgram language</h2> 
+   <p> <form action="cheakllogin.php" method="post"  > 
+   <h2>Register on the website</h2> 
    <label> E-mail address </label>
              <p><input type="email" required placeholder="in ther your emil" name="email" autofocus></p>
        
@@ -33,7 +33,7 @@
  
     <div class="signup-buttons">
   <a href="signup.php">Sign Up</a>
-  <a href="forgot-password.php">Forgot Password</a>
+ 
 </div>
    </form>
          
@@ -43,11 +43,11 @@
     </div> 
 </body>
 <style>
-    body {
+  body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  background-image: url('../program language/image/istockphoto-1460275725-1024x1024.jpg');
+  background-image: url('../porgramming/image/istockphoto-1460275725-1024x1024.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -65,16 +65,13 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-
-    form {
-        max-width: 800px;
-        width: 100%;
- 
-  background-size: cover;
-  background-position: center;
+form {
+  max-width: 800px;
+  width: 100%;
+  background-color: #fff;
+  padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
- 
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Form Sections */
@@ -95,7 +92,7 @@ input[type="email"],
 input[type="password"] {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #666;
   border-radius: 5px;
   font-size: 16px;
   transition: border-color 0.3s ease;
@@ -135,7 +132,7 @@ input[type="reset"]:hover {
 
 .signup-buttons a {
   display: inline-block;
-  background-color: #4CAF50;
+  background-color: #ff0000;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -147,7 +144,7 @@ input[type="reset"]:hover {
 }
 
 .signup-buttons a:hover {
-  background-color: #357a38;
+  background-color: #b30000;
 }
 
 /* Responsive Styles */
@@ -156,6 +153,8 @@ input[type="reset"]:hover {
     padding: 20px;
   }
 }
+ 
+ 
 
           </style>
   <footer >
