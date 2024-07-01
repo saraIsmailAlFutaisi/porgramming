@@ -12,7 +12,18 @@
       <link rel="stylesheet" href="css\stylenew.css">
     <title>login</title>
   </head> 
-  <header></header>
+  <header>
+  <ul>
+<li><a href="../porgramming/home page .php">home</a></li>
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">language </a> </li>
+  <li ><a href="">list of language</a></li>
+  <li> <a href="../porgramming/workshop.php">workshop</a></li>
+  <li><a href="#news">about us</a></li>
+  <li><a href="#news">evaluation</a></li>
+
+</ul>
+  </header>
    
     <main >
     <div class="container">
@@ -27,7 +38,8 @@
     
      
             <h2> <input type="submit" value="login" name="submit">
-             <input type="reset" value="Delete all"></h2>
+             <input type="reset" value="Delete all">
+            </h2>
            
  
  

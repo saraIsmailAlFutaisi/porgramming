@@ -10,23 +10,12 @@
                  <strong>language lasson<p></p> 
                   <p>  </p> </strong>
               </div></div>
-<ul>
-<li><a href="../program language/home page .php">home</a></li>
-<li><a href="../program language/workshop.php">show workshop</a></li>
-<li><a href="#news">create new workshop</a></li>
+              <ul>
+<li><a href="../porgramming/home page .php">home</a></li>
   <li class="dropdown">
-    <a href="javascript:void(0)" class="dropbtn">language </a>
-    <div class="dropdown-content">
-      <a href="../program language/html1.php">html</a>
-      <a href="#">css</a>
-      <a href="#">php</a>
-      <a href="#">c++</a>
-      <a href="#">java script</a>
-      <a href="#">c#</a>
-      <a href="#">java</a>
-     
-    </div>
-  </li>
+    <a href="javascript:void(0)" class="dropbtn">language </a> </li>
+  <li ><a href="">list of language</a></li>
+  <li> <a href="../porgramming/workshop.php">workshop</a></li>
   <li><a href="#news">about us</a></li>
   <li><a href="#news">evaluation</a></li>
 

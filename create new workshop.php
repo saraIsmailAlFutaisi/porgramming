@@ -3,7 +3,7 @@
   <?php
 class WorkshopAnnouncement {
     private $workshopNumber;
-    private $organizerNumber;
+    private   $id;;
     private $language;
     private $startTime;
     private $endTime;
@@ -25,40 +25,25 @@ class WorkshopAnnouncement {
     }
        public function Checktheworkshoptimeanddata($startTime, $endTime, $date){
         
-       }
-       public function databeseconected(){
+       
+      
         require_once 'databaes.php';
         $conn = new mysqli($hn, $un, $pw, $db);
         if ($conn->connect_error) {
               echo "<p>Error: Could not connect to database.<br/>
               Please try again later.</p>";
                 die($conn -> error);
-
+             
                 
             }
-           
-       }
-       public function Storingdatainthedatabase($db){
-       
-         
-            $sql = "INSERT INTO workshops (workid,organizerid, language,starttime,endtime,date,numberofseatsavailable,location,thetopic)
-                    VALUES (:workshopNumber, :organizerNumber, :language, :startTime, :endTime, :date, :availableSeats, :location, :topic)";
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':workshopNumber', $this->workshopNumber);
-            $stmt->bindParam(':organizerNumber', $this->organizerNumber);
-            $stmt->bindParam(':language', $this->language);
-            $stmt->bindParam(':startTime', $this->startTime);
-            $stmt->bindParam(':endTime', $this->endTime);
-            $stmt->bindParam(':date', $this->date);
-            $stmt->bindParam(':availableSeats', $this->availableSeats);
-            $stmt->bindParam(':location', $this->location);
-            $stmt->bindParam(':topic', $this->topic);
-            $stmt->execute();
-
+            $query = "SELECT id, firstname, lastname, email, phonenumber, password FROM user WHERE email = '$email' and password = '$password'";
+            $result = $conn->query($query);
+            $row = mysqli_fetch_assoc($result);
     
-
+            if ($row) {}
        }
-       public function updatetimeordata(){}
+      
+     
     public function getWorkshopNumber() {
         return $this->workshopNumber;
     }
@@ -95,17 +80,6 @@ class WorkshopAnnouncement {
         return $this->topic;
     }
 
-    public function displayAnnouncement() {
-        echo "Workshop Number: " . $this->workshopNumber . "\n";
-        echo "Organizer Number: " . $this->organizerNumber . "\n";
-        echo "Language: " . $this->language . "\n";
-        echo "Start Time: " . $this->startTime . "\n";
-        echo "End Time: " . $this->endTime . "\n";
-        echo "Date: " . $this->date . "\n";
-        echo "Seats Available: " . $this->seatsAvailable . "\n";
-        echo "Location: " . $this->location . "\n";
-        echo "Topic: " . $this->topic . "\n";
-    }
 }
 
   
@@ -140,8 +114,8 @@ $workshop = new WorkshopAnnouncement(
     $Location,
     $Topic
 );
+$workshop->Checktheworkshoptimeanddata($startTime, $endTime, $date);
 
-$workshop->displayAnnouncement();
 
 }
  ?> 
