@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<!--
-  سارة إسماعيل الفطيسي
-  تقوم الصفحة بسماح دخول للأشخاص المسجلين في قاعدة البيانات
-   !-->
+  <!--  صفحة نمودج تسجيل الدخول و
+    cssالخاص به-->
+
 <html>
   <head>
   <link rel="icon" href="../"/>
@@ -16,11 +15,12 @@
   <ul>
 <li><a href="../porgramming/home page .php">home</a></li>
   <li class="dropdown">
-    <a href="javascript:void(0)" class="dropbtn">language </a> </li>
   <li ><a href="">list of language</a></li>
   <li> <a href="../porgramming/workshop.php">workshop</a></li>
-  <li><a href="#news">about us</a></li>
-  <li><a href="#news">evaluation</a></li>
+  <li><a href="">about us</a></li>
+  <li><a href="">evaluation</a></li>
+  <li><a href="../porgramming/logout.php">logout</a></li>
+</ul>
 
 </ul>
   </header>

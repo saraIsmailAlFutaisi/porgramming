@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <?php
-class WorkshopAnnouncement {
-    private $workshopNumber;
-    private   $id;;
+
+  // كلاس ورشة عمل لديه وظيفة إنشاء ورشة العمل
+  class WorkshopAnnouncement {
+    private $id;
     private $language;
     private $startTime;
     private $endTime;
@@ -12,112 +13,147 @@ class WorkshopAnnouncement {
     private $location;
     private $topic;
 
-    public function __construct($workshopNumber, $organizerNumber, $language, $startTime, $endTime, $date, $seatsAvailable, $location, $topic) {
-        $this->workshopNumber = $workshopNumber;
-        $this->organizerNumber = $organizerNumber;
-        $this->language = $language;
-        $this->startTime = $startTime;
-        $this->endTime = $endTime;
-        $this->date = $date;
-        $this->seatsAvailable = $seatsAvailable;
-        $this->location = $location;
-        $this->topic = $topic;
-    }
-       public function Checktheworkshoptimeanddata($startTime, $endTime, $date){
-        
-       
-      
-        require_once 'databaes.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) {
-              echo "<p>Error: Could not connect to database.<br/>
-              Please try again later.</p>";
-                die($conn -> error);
-             
-                
-            }
-            $query = "SELECT id, firstname, lastname, email, phonenumber, password FROM user WHERE email = '$email' and password = '$password'";
-            $result = $conn->query($query);
-            $row = mysqli_fetch_assoc($result);
-    
-            if ($row) {}
-       }
-      
-     
-    public function getWorkshopNumber() {
-        return $this->workshopNumber;
+    public function __construct($id,  $language, $startTime, $endTime, $date, $seatsAvailable, $location, $topic) {
+      // تعيين قيم عند إنشاء كائن من الصف
+      $this->id = $id;
+      $this->language = $language;
+      $this->startTime = $startTime;
+      $this->endTime = $endTime;
+      $this->date = $date;
+      $this->seatsAvailable = $seatsAvailable;
+      $this->location = $location;
+      $this->topic = $topic;
     }
 
-    public function getOrganizerNumber() {
-        return $this->organizerNumber;
+    // طريقة للتحقق من توفر وقت وتاريخ الورشة
+    public function Checktheworkshoptimeanddata($startTime, $endTime, $date) {
+        include 'databaes.php';
+        $conn = new mysqli($hn, $un, $pw, $db);
+        if ($conn->connect_error) {
+          echo "<p>Error: Could not connect to database.<br/>
+          Please try again later.</p>";
+          die($conn->error);
+        }
+      $query = "SELECT startTime, endTime, data FROM workshop WHERE data = '$date' AND (('$startTime' BETWEEN startTime AND endTime) OR ('$endTime' BETWEEN startTime AND endTime))";
+      $result = $conn->query($query);
+      $row = mysqli_fetch_assoc($result);
+      if ($row) {
+        
+    // إذا وجد ورشة عمل لها نفس الوقت وتاريخ
+         return true;
+      } else {
+        
+    // إذا لم يوجد ورشة عمل لها نفس الوقت وتاريخ
+        return false;
+      }
+    }
+
+
+    //  لتخزين بيانات الورشة في قاعدة البيانات
+    public function Storeindatabase($id,  $language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic){
+        include 'databaes.php';
+        $conn = new mysqli($hn, $un, $pw, $db);
+        if ($conn->connect_error) {
+          echo "<p>Error: Could not connect to database.<br/>
+          Please try again later.</p>";
+          die($conn->error);
+        }
+          $query1 = "INSERT INTO workshop(iduser,language,startTime,endTime,location,numberofseatsavailable,data,thetopic)VALUE ('$id',' $language','$startTime','$endTime','$location ','$seatsAvailable',' $date','$topic')";
+          $result1 = $conn->query($query1);
+          if (!$result1) {
+            echo $conn->error;
+            echo "<br/>.The item was not added.";
+            echo "<br/>$query1";
+          }
+
+    }
+
+    // طرق الوصول إلى خصائص الصف
+    public function getid() {
+      return $this->id;
     }
 
     public function getLanguage() {
-        return $this->language;
+      return $this->language;
     }
 
     public function getStartTime() {
-        return $this->startTime;
+      return $this->startTime;
     }
 
     public function getEndTime() {
-        return $this->endTime;
+      return $this->endTime;
     }
 
     public function getDate() {
-        return $this->date;
+      return $this->date;
     }
 
     public function getSeatsAvailable() {
-        return $this->seatsAvailable;
+      return $this->seatsAvailable;
     }
 
     public function getLocation() {
-        return $this->location;
+      return $this->location;
     }
 
     public function getTopic() {
-        return $this->topic;
+      return $this->topic;
+    }
+  }
+
+  // بدء جلسة المستخدم
+  session_start();
+   // تحقق مل إذا كان المستخدم قد سجل الدخول
+  if (!empty($_SESSION['userid'])) {
+    $id = $_SESSION['userid'];
+
+    // التعامل مع البيانات المرسلة من خلال النموذج
+    if (isset($_POST['save'])) {
+      $language = $_POST['language'];
+      $startTime = $_POST['startTime'];
+      $endTime = $_POST['endTime'];
+      $date = $_POST['DATE'];
+      $seatsAvailable = $_POST['number'];
+      $location = $_POST['location'];
+      $topic = $_POST['Topic'];
+     
+      $workshop = new WorkshopAnnouncement(
+        $id,
+        $language,
+        $startTime,
+        $endTime,
+        $date,
+        $seatsAvailable,
+        $location,
+        $topic
+      );
+      
+      // التحقق من توفر وقت وتاريخ الورشة
+    //  إذا تحقق شرط ورجعت ترسلك لصفحة مره اخري لإعادة المحاولة
+
+try {
+    if ($workshop->Checktheworkshoptimeanddata($startTime, $endTime, $date)) {
+        header('REFRESH:4;URL=workshop.php');
+        echo 'There is already a workshop scheduled at the same date and time. Please try again.';
+    } else {
+         //  إذا لم يتحقق شرط تخزن البيانات في قاعدة البيانات
+        $workshop->Storeindatabase($id,  $language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic);
+        header('REFRESH:4;URL=workshop.php');
+        echo 'The workshop has been created successfully.';
+    }
+} catch (Exception $e) {
+    // في حالة حدوث أي استثناء، قم بإظهار رسالة الخطأ
+
+    echo 'An error occurred: ' . $e->getMessage();
+  
+    }
+ } }else {
+       // إذا لم يقم المستخدم بي تسجيل الدخول
+       header('REFRESH:5;URL=login.php');
+      echo 'Please log in to the website first.';
     }
 
-}
-
-  
-session_start();
-if(!empty($_SESSION['userid']))
-{$Organizer= $_SESSION['userid'];
-}
-else{
-    $Organizer= $_SESSION['user'];
-}
-
-// Example usage\
-if(isset($_POST['submit'])){
-  
-    $Language=$_POST['Language'];
-    $StartTime=$_POST['StartTime'];
-    $endTime=$_POST['endTime'];
-    $Date=$_POST['Date'];
-    $SeatsAvailable=$_POST['Seats Available'];
-    $Location=$_POST['Location'];
-    $Topic=$_POST['Topic'];
-
-
-$workshop = new WorkshopAnnouncement(
-    $WorkshopNumber,
-    $Organizer,
-    $Language,
-    $StartTime,
-    $endTime,
-    $Date,
-    $SeatsAvailable,
-    $Location,
-    $Topic
-);
-$workshop->Checktheworkshoptimeanddata($startTime, $endTime, $date);
-
-
-}
- ?> 
- </html>
-   
+ 
+  ?>
+</html>

@@ -1,33 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
+   <!-- صفحة تعرض نموذج إنشاء.ورشة العمل وc
+    ss الخاص به --> 
 <link rel="stylesheet" href="../program language/css/stylenew.css">
       <link rel="stylesheet" href="css\stylenew.css">
 </head>
 <body>
-<header>
-<div id="imge"> <div>
-                 <strong>language lasson<p></p> 
-                  <p>  </p> </strong>
-              </div></div>
-              <ul>
-<li><a href="../porgramming/home page .php">home</a></li>
-  <li class="dropdown">
-    <a href="javascript:void(0)" class="dropbtn">language </a> </li>
-  <li ><a href="">list of language</a></li>
-  <li> <a href="../porgramming/workshop.php">workshop</a></li>
-  <li><a href="#news">about us</a></li>
-  <li><a href="#news">evaluation</a></li>
 
+<header>
+<ul>
+<li  >
+<?php
+                             session_start();
+                             if(empty(  $_SESSION['email']))
+                           {
+                         ?>
+                         <a href="../porgramming/login.php">login</a>
+                       
+                         <?php
+                           } 
+                           else if(!empty( $_SESSION['email'])){
+                            ?>
+                            <strong> <img alt="enterh.png"src="../porgramming\image\user (2).png"></strong>
+                            <?php   
+                            echo $_SESSION['email'];
+                           }
+                          ?>
+</li>
+  <li class="dropdown">
+ 
+
+  <li> <a href="../porgramming/home page .php">Home</a></li>
+  <li ><a href="">list of language</a></li>
+  <li><a href="">about us</a></li>
+  <li><a href="">evaluation</a></li>
+  <li><a href="../porgramming/logout.php">logout</a></li>
 </ul>
-</header>
+             </header>
 <section><h2>create new workshop</h2>
  </section>
 <main>
        <form action="create new workshop.php"  method="post">
              <div>
                <p> <label>date</label>
-                <input  type="date"   name="DATE"/></p>
+                <input  type="date"   name="DATE"></p>
             </div>
             <div> 
             <p> <label >language </label>
@@ -40,21 +57,20 @@
            </div>
             
           <div> 
-          <p> <label >time start </label>
-                <input type="time" required placeholder=" time" name="time" autofocus></p>
+          <p> <label >start time  </label>
+                <input type="time" required placeholder=" time" name="startTime" autofocus></p>
           </div>
-          <div> 
-          <p> <label >time end </label>
-                <input type="time" required placeholder=" timed" name="timed" autofocus></p>
+          <p> <label >end time  </label>
+                <input type="time" required placeholder=" time" name="endTime" autofocus></p>
           </div>
-        
+          
           <div> 
             <label> number of seats available </label>
             <p><input type="number" required    name="number" ></p> 
          </div>
          <div> 
             <label> the topic</label>
-            <p><input type="text" required   maxlength="15" minlength="10" placeholder="in ther your the topic" name="the topic" ></p> 
+            <p><input type="text" required   maxlength="40" minlength="10" placeholder="in ther your the topic" name="Topic" ></p> 
          </div>
          
          <p>
