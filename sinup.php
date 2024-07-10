@@ -29,14 +29,21 @@
     <main >
     <div class="container">
    <p> <form action="cheakllogin.php" method="post"  > 
+  
    <h2>Register on the website</h2> 
+   <label> firs tname</label>
+  <p> <input type="text" required   maxlength="10" minlength="5" placeholder="in ther your first name" name="firstname" ></p>
+   <label> last name</label>
+       <p>   <input type="text" required   maxlength="10" minlength="5" placeholder="in ther your last name" name="lastname" ></p>
+         
    <label> E-mail address </label>
              <p><input type="email" required placeholder="in ther your emil" name="email" autofocus></p>
-       
+         
     
         <label>password</label>
         <p><input type="password" required  maxlength="14" minlength="10" placeholder="in ther your password" name="password" autofocus></p>
-    
+        <label>confirm password </label>
+          <p><input type="password" required  maxlength="14" minlength="10"placeholder="confirm  your password" name="confirm" ></p>
      
             <h2> <input type="submit" value="login" name="submit">
              <input type="reset" value="Delete all">
@@ -176,3 +183,4 @@ input[type="reset"]:hover {
   </footer> 
   
 </html>
+

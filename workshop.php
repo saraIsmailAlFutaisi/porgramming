@@ -36,6 +36,7 @@
   <li><a href="">about us</a></li>
   <li><a href="">evaluation</a></li>
   <li><a href="../porgramming/logout.php">logout</a></li>
+  <li><a href="../porgramming/singup.php">sinup</a></li>
 </ul>
              </header>
 <section><h2>create new workshop</h2>

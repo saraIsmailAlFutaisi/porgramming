@@ -40,6 +40,7 @@
         <li><a href="">about us</a></li>
         <li><a href="">evaluation</a></li>
         <li><a href="../porgramming/logout.php">logout</a></li>
+        <li><a href="../porgramming/sinup.php">sinup</a></li>
       </li>
     </ul>
   </header>
