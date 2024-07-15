@@ -38,21 +38,22 @@
          
    <label> E-mail address </label>
              <p><input type="email" required placeholder="in ther your emil" name="email" autofocus></p>
-         
+             <label> phone number </label>
+             <p><input type="number" required placeholder="in ther your phone number" name="phone" autofocus></p>
     
         <label>password</label>
         <p><input type="password" required  maxlength="14" minlength="10" placeholder="in ther your password" name="password" autofocus></p>
         <label>confirm password </label>
           <p><input type="password" required  maxlength="14" minlength="10"placeholder="confirm  your password" name="confirm" ></p>
      
-            <h2> <input type="submit" value="login" name="submit">
+            <h2> <input type="submit" value="sinup" name="register">
              <input type="reset" value="Delete all">
             </h2>
            
  
  
     <div class="signup-buttons">
-  <a href="signup.php">Sign Up</a>
+ 
  
 </div>
    </form>
@@ -63,7 +64,7 @@
     </div> 
 </body>
 <style>
-  body {
+ body {
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -108,7 +109,9 @@ label {
 }
 
 /* Input Fields */
+input[type="text"],
 input[type="email"],
+input[type="number"],
 input[type="password"] {
   width: 100%;
   padding: 10px;
@@ -118,7 +121,9 @@ input[type="password"] {
   transition: border-color 0.3s ease;
 }
 
+input[type="text"]:focus,
 input[type="email"]:focus,
+input[type="number"]:focus,
 input[type="password"]:focus {
   outline: none;
   border-color: #ff0000;
@@ -173,7 +178,6 @@ input[type="reset"]:hover {
     padding: 20px;
   }
 }
- 
  
 
           </style>

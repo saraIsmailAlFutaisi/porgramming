@@ -4,43 +4,38 @@
 
 class User {
     // هذه الخصائص الخاصة بالمستخدم
-    private $id;
+  
     private $firstname;
     private $lastname;
     private $phone;
     private $email;
     private $password;
-
+    private $confpassword;
     // هذا هو البناء الخاص بالفصل
-    public function __construct($id, $firstname, $lastname, $email, $phone, $password) {
-        $this->id = $id;
+    public function __construct( $firstname, $lastname, $email, $phone, $password,$confpassword) {
+    
         $this->firstname = $firstname;
         $this->lastname = $lastname;
         $this->phone = $phone;
         $this->email = $email;
         $this->password = $password;
+        $this->$confpassword = $confpassword;
     }
 
     // هذه الدالة تقوم بتسجيل الدخول للمستخدم
     public function login($email, $password) {
         try {
             // تتم عملية الاتصال بقاعدة البيانات هنا
-            require_once 'databaes.php';
-            $conn = new mysqli($hn, $un, $pw, $db);
-
-            // التحقق من وجود خطأ في الاتصال بقاعدة البيانات
-            if ($conn->connect_error) {
-                throw new Exception("خطأ: تعذر الاتصال بقاعدة البيانات. الرجاء المحاولة مرة أخرى لاحقًا.");
-            }
+            $conn =  $this->connectToDatabase();
           
             // استعلام SQL للتحقق من البريد الإلكتروني وكلمة المرور
-            $query = "SELECT id, firstname, lastname, email, phonenumber, password FROM user WHERE email = '$email' and password = '$password'";
+            $query = "SELECT id-user, firstname, lastname, email, phonenumber, password FROM user WHERE email = '$email' and password = '$password'";
             $result = $conn->query($query);
             $row = mysqli_fetch_assoc($result);
 
             // إذا تم العثور على المستخدم في قاعدة البيانات
             if ($row) {
-                $this->id = $row['id'];
+              
                 $this->firstname = $row['firstname'];
                 $this->lastname = $row['lastname'];
                 $this->email = $row['email'];
@@ -52,7 +47,7 @@ class User {
                     // بدء جلسة جديدة وتخزين معلومات المستخدم
                     session_start();
                     $_SESSION['email'] = $this->email;
-                    $_SESSION['userid'] = $this->id;
+                    $_SESSION['userid'] =$row['id-user'];
                     return true;
                 } else {
                     return false;
@@ -66,39 +61,62 @@ class User {
             return false;
         }
     }
-   public function register($firstname, $lastname, $email, $phone, $password) {
-    try {
-        // The database connection is done here
+    function connectToDatabase() {
+        // إنشاء اتصال قاعدة البيانات هنا
         require_once 'databaes.php';
         $conn = new mysqli($hn, $un, $pw, $db);
-
-        // Check if there is an error connecting to the database
+    
+        // تحقق من وجود خطأ في الاتصال بقاعدة البيانات
         if ($conn->connect_error) {
-            throw new Exception("Error: Could not connect to the database. Please try again later.");
+            throw new Exception("خطأ: تعذر الاتصال بقاعدة البيانات. حاول مرة أخرى لاحقًا.");
         }
-
-        // SQL query to insert the new user
-        $query = "INSERT INTO user (firstname, lastname, email, phonenumber, password) VALUES ('$firstname', '$lastname', '$email', '$phone', '$password')";
-        if ($conn->query($query) === TRUE) {
-            // Return the new user's ID
-            return $conn->insert_id;
-        } else {
-            throw new Exception("Error: " . $query . "<br>" . $conn->error);
-        }
-    } catch (Exception $e) {
-        // Handle any exceptions and return false
-        echo "Error occurred: " . $e->getMessage();
-        return false;
+    
+        return $conn;
     }
-}
+    
+    function register($firstname, $lastname, $email, $phone, $password, $confirmPassword) {
+        try {
+            // الاتصال بقاعدة البيانات
+            $conn =  $this->connectToDatabase();
+    
+            // تحقق من وجود البريد الإلكتروني بالفعل في قاعدة البيانات
+            $checkQuery = "SELECT * FROM user WHERE email = '$email'";
+            $result = $conn->query($checkQuery);
+            if ($result->num_rows > 0) {
+                throw new Exception("خطأ: البريد الإلكتروني مسجل بالفعل. حاول باستخدام بريد إلكتروني مختلف.");
+            }
+    
+            // تحقق من تطابق كلمة المرور وتأكيدها
+            if ($password !== $confirmPassword) {
+                throw new Exception("خطأ: كلمة المرور وتأكيد كلمة المرور غير متطابقتين.");
+            }
+    
+            // استعلام SQL لإدخال المستخدم الجديد
+            $query = "INSERT INTO user (firstname, lastname, email, phonenumber, password) VALUES ($firstname, $lastname, $email, $phone, $password)";
+            $stmt = $conn->prepare($query);
+          
+            if ($stmt->execute()) {
+                // إرجاع معرف المستخدم الجديد
+                return $conn->insert_id;
+            } else {
+                throw new Exception("خطأ: " . $query . "<br>" . $conn->error);
+            }
+        } catch (Exception $e) {
+            // التعامل مع أي استثناءات وإرجاع قيمة خاطئة
+            echo "حدث خطأ: " . $e->getMessage();
+            return false;
+        } finally {
+            // إغلاق اتصال قاعدة البيانات
+         
+        }
+    }
+    
     // دوال المساعدة للحصول على معلومات المستخدم
     public function getEmail() {
         return $this->email;
     }
 
-    public function getId() {
-        return $this->id;
-    }
+     
 }
 
 // هذا الجزء يقوم بمعالجة النموذج المرسل من قبل المستخدم
@@ -106,7 +124,7 @@ if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $user = new User(0, '', '', $email, '', $password);
+    $user = new User('','', $email, '', $password,'');
 
     // محاولة تسجيل الدخول للمستخدم
     if ($user->login($email, $password)) {
@@ -127,9 +145,9 @@ if (isset($_POST['register'])) {
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $password = $_POST['password'];
-
-    $userregister = new User(0, $firstname, $lastname, $email, $phone, $password);
-    $userId = $userregister->register($firstname, $lastname, $email, $phone, $password);
+ $confirmPassword = $_POST['confirm'];
+    $userregister = new User($firstname, $lastname, $email, $phone, $password, $confirmPassword);
+    $userId = $userregister->register($firstname, $lastname, $email, $phone, $password, $confirmPassword);
 
     if ($userId) {
         // If the registration is successful, redirect the user to the login page

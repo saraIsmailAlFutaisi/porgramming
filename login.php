@@ -35,7 +35,7 @@
        
     
         <label>password</label>
-        <p><input type="password" required  maxlength="14" minlength="10" placeholder="in ther your password" name="password" autofocus></p>
+        <p><input type="password" required  maxlength="14" minlength="10 placeholder="in ther your password" name="password" autofocus></p>
     
      
             <h2> <input type="submit" value="login" name="submit">
