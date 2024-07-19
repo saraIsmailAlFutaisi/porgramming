@@ -1,5 +1,56 @@
 <!DOCTYPE html>
+<head>
+  
+  <link rel="stylesheet" href="../program language/css/stylenew.css">
+  <link rel="stylesheet" href="css\stylenew.css">
+</head>
+<header>
+    <ul>
+      <li>
+        <!-- بداية معالجة جلسة المستخدم -->
+        <?php
+          session_start();
+          $id = $_SESSION['userid'];
+          // إذا لم يكن هناك بريد إلكتروني في الجلسة
+          if(empty($_SESSION['email']))
+          {
+            // عرض رابط تسجيل الدخول
+        ?>
+        <a href="../porgramming/login.php">login</a>
+        <?php
+          }
+          // إذا كان هناك بريد إلكتروني في الجلسة
+          else if(!empty($_SESSION['email']))
+          {
+            // عرض صورة المستخدم وبريده الإلكتروني
+        ?>
+        <strong><img alt="enterh.png" src="../porgramming\image\user (2).png"></strong>
+        <?php
+          echo $_SESSION['email'];
+          }
+        ?>
+        <!-- نهاية معالجة جلسة المستخدم -->
+      </li>
+   
+  <li> <a href="../porgramming/home page .php">Home</a></li>
+  <li><a href="">list of language</a></li>
+  <li class="dropdown">
+    <a href="" class="dropbtn">workshop</a>
+    <div class="dropdown-content">
+      <a href="../porgramming/workshop.php">create new workshop </a>
+      <a href="../porgramming/searchworkshop.php">search workshop</a>
+      <a href="">Link 3</a>
+    </div>
+  </li>
+      
+      </li>
+        <li><a href="">evaluation</a></li>
+        <li><a href="../porgramming/logout.php">logout</a></li>
+        <li><a href="">about us</a></li>
+</ul>
+  </header>
 <html>
+
   <?php
 
   // كلاس ورشة عمل لديه وظيفة إنشاء ورشة العمل
@@ -27,13 +78,7 @@
 
     // طريقة للتحقق من توفر وقت وتاريخ الورشة
     public function Checktheworkshoptimeanddata($startTime, $endTime, $date) {
-        include 'databaes.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) {
-          echo "<p>Error: Could not connect to database.<br/>
-          Please try again later.</p>";
-          die($conn->error);
-        }
+      $conn =  $this->connectToDatabase();
       $query = "SELECT startTime, endTime, data FROM workshop WHERE data = '$date' AND (('$startTime' BETWEEN startTime AND endTime) OR ('$endTime' BETWEEN startTime AND endTime))";
       $result = $conn->query($query);
       $row = mysqli_fetch_assoc($result);
@@ -51,13 +96,7 @@
 
     //  لتخزين بيانات الورشة في قاعدة البيانات
     public function Storeindatabase($id,  $language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic){
-        include 'databaes.php';
-        $conn = new mysqli($hn, $un, $pw, $db);
-        if ($conn->connect_error) {
-          echo "<p>Error: Could not connect to database.<br/>
-          Please try again later.</p>";
-          die($conn->error);
-        }
+      $conn =  $this->connectToDatabase();
           $query1 = "INSERT INTO workshop(iduser,language,startTime,endTime,location,numberofseatsavailable,data,thetopic)VALUE ('$id',' $language','$startTime','$endTime','$location ','$seatsAvailable',' $date','$topic')";
           $result1 = $conn->query($query1);
           if (!$result1) {
@@ -65,8 +104,23 @@
             echo "<br/>.The item was not added.";
             echo "<br/>$query1";
           }
+          
 
     }
+   
+
+    function connectToDatabase() {
+      // إنشاء اتصال قاعدة البيانات هنا
+      include 'databaes.php';
+      $conn = new mysqli($hn, $un, $pw, $db);
+  
+      // تحقق من وجود خطأ في الاتصال بقاعدة البيانات
+      if ($conn->connect_error) {
+          throw new Exception("خطأ: تعذر الاتصال بقاعدة البيانات. حاول مرة أخرى لاحقًا.");
+      }
+  
+      return $conn;
+  }
 
     // طرق الوصول إلى خصائص الصف
     public function getid() {
@@ -103,10 +157,10 @@
   }
 
   // بدء جلسة المستخدم
-  session_start();
+ 
    // تحقق مل إذا كان المستخدم قد سجل الدخول
-  if (!empty($_SESSION['userid'])) {
-    $id = $_SESSION['userid'];
+  if (!empty($id)) {
+   
 
     // التعامل مع البيانات المرسلة من خلال النموذج
     if (isset($_POST['save'])) {
@@ -153,7 +207,6 @@ try {
        header('REFRESH:5;URL=login.php');
       echo 'Please log in to the website first.';
     }
-
- 
-  ?>
+    
+   ?>
 </html>

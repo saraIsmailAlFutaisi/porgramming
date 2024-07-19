@@ -33,16 +33,23 @@
         ?>
         <!-- نهاية معالجة جلسة المستخدم -->
       </li>
-      <li class="dropdown">
-        <!-- عناصر القائمة -->
-        <li><a href="">list of language</a></li>
-        <li><a href="../porgramming/workshop.php">workshop</a></li>
-        <li><a href="">about us</a></li>
+   
+  <li> <a href="../porgramming/home page .php">Home</a></li>
+  <li><a href="">list of language</a></li>
+  <li class="dropdown">
+    <a href="" class="dropbtn">workshop</a>
+    <div class="dropdown-content">
+      <a href="../porgramming/workshop.php">create new workshop </a>
+      <a href="../porgramming/searchworkshop.php">search workshop</a>
+      <a href="">Link 3</a>
+    </div>
+  </li>
+      
+      </li>
         <li><a href="">evaluation</a></li>
         <li><a href="../porgramming/logout.php">logout</a></li>
-        <li><a href="../porgramming/sinup.php">sinup</a></li>
-      </li>
-    </ul>
+        <li><a href="">about us</a></li>
+</ul>
   </header>
 
   <section>
