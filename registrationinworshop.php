@@ -1,25 +1,27 @@
 <?php
-  include'C:\xampp\htdocs\php\porgramming\create new workshop.php';
-class RegistrationInWorkshop  extends WorkshopAnnouncement
+ include 'C:\xampp\htdocs\php\porgramming\interface.php';
+
+ class RegistrationInWorkshop 
  {
-    private $workshopId;
-    private $userId;
-    private $registrationDate;
-    private $confirmationStatus;
+     private $workshopId;
+   private$userId ;
+     private $registrationDate;
+     private $confirmationStatus;
+ 
+     public function registerForWorkshop($userId,$workshopId, $registrationDate, $confirmationStatus)
+     {   
 
-    public function registerForWorkshop($workshopId, $userId, $registrationDate, $confirmationStatus) {
-        $this->workshopId = $workshopId;
+         $this->workshopId = $workshopId;
         $this->userId = $userId;
-        $this->registrationDate = $registrationDate;
-        $this->confirmationStatus = $confirmationStatus;
-    }
-
+         $this->registrationDate = $registrationDate;
+         $this->confirmationStatus = $confirmationStatus;
+     }
     public function getWorkshopId() {
         return $this->workshopId;
     }
 
     public function getUserId() {
-        return $this->userId;
+    return $this->userId;
     }
 
     public function getRegistrationDate() {
@@ -44,57 +46,108 @@ class RegistrationInWorkshop  extends WorkshopAnnouncement
         }
     
         return $conn;
-    }
+    } 
+    public function  cheakuser( $workshopId, $userId){
 
-  //  لتخزين بيانات الورشة في قاعدة البيانات
-  public function Storeindatabase($id,  $language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic){
-    $conn =  $this->connectToDatabase();
-        $query1 = "INSERT INTO registrationworkshop(workshop,userid,data,confirmation)VALUE ('$workshop',' $userid','$data','$confirmation')";
-        $result1 = $conn->query($query1);
-        if (!$result1) {
-          echo $conn->error;
-          echo "<br/>.The item was not added.";
-          echo "<br/>$query1";
-        }
-        
-
+      $conn =  $this->connectToDatabase();
+      // استعلام للتحقق من تسجيل المستخدم في الورشة
+      $query = "SELECT userid,workshop FROM registrationworkshop WHERE userid = '$userId' AND workshop=' $workshopId'";
+      $result = $conn->query($query);
+      $row = mysqli_fetch_assoc($result);
+      if ($row) {
+              
+          $this->userId = $row['userid'];
+          $this->workshopId = $row['workshop'];
+          // التحقق من إذا كان المستخدم قد سجل في ورشة العمل من قبل
+          if ( $this->userId ==  $userId &&   $this->workshopId ==$workshopId) {
+              return false;
+             
+          } 
+          else {
+              return true;
+          }
+      } 
+     
+      
+       
   }
-  $userid= $_GET['iduser']; 
+  public function  cheakworkshop($workshopId, $numberofseatsavailable,$userId)
+  {   
+      $conn =  $this->connectToDatabase();
+      // تحديث عدد المقاعد المتوفرة في الورشة
+      $RESLT1=$numberofseatsavailable-1;
+      $query2="UPDATE workshop SET numberofseatsavailable='$RESLT1'WHERE workid = '$workshopId'AND iduser='$userId' ";
+      $result2= $conn->query( $query2);
   
-  $workshop= $_GET['workid'] ; 
-}
+  }
+    //  لتخزين بيانات الورشة في قاعدة البيانات
+    public function Storeindatabas( $workshopId, $userId, $registrationDate, $confirmationStatus){
+      $conn =  $this->connectToDatabase();
+          $query1 = "INSERT INTO registrationworkshop(workshop,userid,datare,confirmation)VALUE ('$workshopId',' $userId','  $registrationDate','$confirmationStatus')";
+          $result1 = $conn->query($query1);
+          if (!$result1) {
+            echo $conn->error;
+            echo "<br/>.The item was not added.";
+            echo "<br/>$query1";
+          }
+          else{
+              echo "Your registration for the workshop has been successfully stored ";  
+          }
+          
+  
+    }
+  
+  }
+    
+  $userId = $_GET['iduser'];
+  $workshopId = $_GET['workid'];
+  
+  
+  ?>
+  
+  <form  method="post">
+   
+    <label for="registration-date">Registration Date:</label>
+    <input type="date" id="registration-date" name="registration-date" required>
+  
+    <label for="confirmation-status">Confirmation Status:</label>
+    <select id="confirmation-status" name="confirmation-status" required>
+      <option value="Select">Select status</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="maybe">maybe</option>
+    </select>
+  
+    <button type="submit" name="save" >Register</button>
+  </form>
+  <?php
+  
+  
+  if (isset($_POST['save'])) {
+  
+      $registrationDate=$_POST['registration-date'];
+      $confirmationStatus=$_POST['confirmation-status'];
+    
+      $registration =new RegistrationInWorkshop( $userId,$workshopId, $registrationDate, $confirmationStatus);
+      
+          // التحقق من إذا كان المستخدم قد سجل في ورشة العمل من قبل
+      $reg= $registration->  cheakuser( $workshopId, $userId);
+      
+    if($reg==false) 
+    { 
+      // الحصول على عدد المقاعد المتوفرة من الاستعلام
+      $numberofseatsavailable = $_GET['numberofseatsavailable'];
+      // تحديث عدد المقاعد المتوفرة
+      $registration->  cheakworkshop( $workshopId, $numberofseatsavailable,$userId);
+      // تخزين بيانات التسجيل في قاعدة البيانات
+      $registration-> Storeindatabas( $workshopId, $userId, $registrationDate, $confirmationStatus );
+  
+    }
+    else{
+      echo'You have already registered for the workshop ';
+    }
+     
+  }
 
-?>
-
-<form action="registration.php" method="post">
-  <label for="workshop-id">Workshop ID:</label>
-  <input type="text" id="workshop-id" name="workshop-id" value="<?php echo $workshop?>">
-
-  <label for="user-id">User ID:</label>
-  <input type="text" id="user-id" name="user-id" value="<?php echo  $userid?>">
-
-  <label for="registration-date">Registration Date:</label>
-  <input type="date" id="registration-date" name="registration-date" required>
-
-  <label for="confirmation-status">Confirmation Status:</label>
-  <select id="confirmation-status" name="confirmation-status" required>
-    <option value="">Select status</option>
-    <option value="confirmed">Confirmed</option>
-    <option value="maybe">maybe</option>
-  </select>
-
-  <button type="submit" name="save" >Register</button>
-</form>
-<?php
-
-
-if (isset($_POST['save'])) {
-
-    $data=$_POST['registration-date'];
-    $confirmation=$_POST['confirmation-status'];
-    echo $confirmation;
-
-}  
 ?>
   <style>
       

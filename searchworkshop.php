@@ -1,42 +1,46 @@
 
 
-  <?php
-  include'C:\xampp\htdocs\php\porgramming\create new workshop.php';
+<?php
+include 'C:\xampp\htdocs\php\porgramming\create new workshop.php';
+
+// هذا الكلاس هو امتداد لكلاس WorkshopAnnouncement الذي تم تعريفه في الملف "create new workshop.php"
 class showworkshop extends WorkshopAnnouncement
 {
+    // هذه الدالة تستخدم للبحث عن الورش التدريبية التي تطابق معايير البحث المقدمة
     public function searchWorkshops($date, $startTime, $endTime)
     {
+        // إذا لم يتم إدخال أي معايير للبحث، يتم عرض رسالة تطلب من المستخدم إعادة المحاولة
         if (!$date && !$startTime && !$endTime) {
             echo '<p class="no-workshops">You have not entered search details.<br/>
                   Please go back and try again.</p>';
-            exit;
+            return false;
         }
 
-        $conn = $this->connectToDatabase();
-        $query = "SELECT * FROM workshop WHERE data = '$date' AND (('$startTime' BETWEEN startTime AND endTime) OR ('$endTime' BETWEEN startTime AND endTime))";
-        $result = $conn->query($query);
-        if (!$result) {
-            echo "<p class='no-workshops'>Unable to execute the query.</p>";
-            echo $query;
-            die($conn->error);
-        }
+        try {
+            // الاتصال بقاعدة البيانات
+            $conn = $this->connectToDatabase();
+            // استعلام SQL للبحث عن الورش التدريبية التي تطابق معايير البحث
+            $query = "SELECT * FROM workshop WHERE data = '$date' AND (('$startTime' BETWEEN startTime AND endTime) OR ('$endTime' BETWEEN startTime AND endTime))";
+            $result = $conn->query($query);
 
-        if ($result->num_rows > 0) {
-            echo '<table class="workshop-table">';
-            echo '<tr>
-                    <th>Language</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Date</th>
-                    <th>Number of Seats Available</th>
-                    <th>Location</th>
-                    <th>Topic</th>
-                    <th>Register for the workshop</th>
-                  </tr>';
-                 
+            // إذا تم العثور على ورش تدريبية، يتم عرضها في جدول
+            if ($result->num_rows > 0) {
+                echo '<table class="workshop-table">';
+                echo '<tr>
+                        <th>Language</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Date</th>
+                        <th>Number of Seats Available</th>
+                        <th>Location</th>
+                        <th>Topic</th>
+                        <th>Register for the workshop</th>
+                      </tr>';
 
-                  while ($data = $result->fetch_array(MYSQLI_ASSOC)) {
+                // عرض البيانات الخاصة بكل ورشة تدريبية في الجدول
+                while ($data = $result->fetch_array(MYSQLI_ASSOC)) {
                     $rowClass = '';
+                    // تحديد أي الورش تطابق معايير البحث
                     if (($data['startTime'] >= $startTime && $data['startTime'] <= $endTime) || ($data['endTime'] >= $startTime && $data['endTime'] <= $endTime)) {
                         $rowClass = 'row-match';
                     }
@@ -49,20 +53,31 @@ class showworkshop extends WorkshopAnnouncement
                             <td>' . $data['location'] . '</td>
                             <td>' . $data['thetopic'] . '</td>
                             <td>
-                                <a href="registrationinworshop.php?iduser=' . $data['iduser'] . '&workid=' . $data['workid'] . '">
+                                <a href="registrationinworshop.php?iduser=' . $data['iduser'] . '&workid=' . $data['workid'] .'&language=' . $data['language']  .'&startTime=' . $data['startTime'] .'&endTime=' . $data['endTime'] .'&data=' . $data['data'] .'&numberofseatsavailable=' . $data['numberofseatsavailable'] .'&location=' . $data['location'] . '&thetopic=' . $data['thetopic'] .'">
                                     <button style="font-size: 16px; padding: 10px 20px;">register</button>
                                 </a>
                             </td>
                         </tr>';
                 }
                 echo '</table>';
-       
+            } else {
+                // إذا لم يتم العثور على ورش تدريبية، يتم عرض رسالة تبليغ المستخدم
+                echo '<p class="no-workshops">There are no available workshops that match your search criteria.</p>';
+                return false;
+            }
+        } catch (Exception $e) {
+            // في حالة حدوث خطأ، يتم عرض الرسالة الخاصة به
+            echo '<p class="no-workshops">Unable to execute the query: ' . $e->getMessage() . '</p>';
+         
+        }
+
+        
     }
 }
-}
+
 // HTML form
 ?>
-<form  method="post">
+<form method="post">
     <center>
         <p><strong>Choose Search a date:</strong></p>
         <label>date</label>
@@ -74,16 +89,19 @@ class showworkshop extends WorkshopAnnouncement
         <input type="submit" name="search" value="Search">
     </center>
 </form>
-
 <?php
+
 if (isset($_POST['search'])) {
+    // الحصول على معايير البحث من نموذج الاستمارة
     $date = $_POST['DATE'];
     $startTime = $_POST['tim1'];
     $endTime = $_POST['time2'];
-    $workshop = new showworkshop('','','','','','','','');
-    // إذا كانت هناك ورش عمل متاحة، قم بعرضها للمستخدم
+    $workshop = new showworkshop('', '', '', '', '', '', '', '');
+    // إذا توافرت ورش تدريبية، عرضها للمستخدم
     $workshop->searchWorkshops($date, $startTime, $endTime);
-}
+       
+    }
+
 ?>
  <style>
     body {

@@ -1,53 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-   <!-- صفحة تعرض نموذج إنشاء.ورشة العمل وc
-    ss الخاص به --> 
-<link rel="stylesheet" href="../program language/css/stylenew.css">
-      <link rel="stylesheet" href="css\stylenew.css">
-</head>
-<body>
 
 <header>
-<ul>
-<li  >
-<?php
-                             session_start();
-                             if(empty(  $_SESSION['email']))
-                           {
-                         ?>
-                         <a href="../porgramming/login.php">login</a>
-                       
-                         <?php
-                           } 
-                           else if(!empty( $_SESSION['email'])){
-                            ?>
-                            <strong> <img alt="enterh.png"src="../porgramming\image\user (2).png"></strong>
-                            <?php   
-                            echo $_SESSION['email'];
-                           }
-                          ?>
-</li>
+  <?php
   
- 
+  include'C:\xampp\htdocs\php\porgramming\interface.php';
+  ?>
+</header>
+            
 
-  <li> <a href="../porgramming/home page .php">Home</a></li>
-  <li><a href="">list of language</a></li>
-  <li class="dropdown">
-    <a href="" class="dropbtn">workshop</a>
-    <div class="dropdown-content">
-      <a href="../porgramming/workshop.php">create new workshop </a>
-      <a href="../porgramming/searchworkshop.php">search workshop</a>
-      <a href="">Link 3</a>
-    </div>
-  </li>
-      
-      </li>
-        <li><a href="">evaluation</a></li>
-        <li><a href="../porgramming/logout.php">logout</a></li>
-        <li><a href="">about us</a></li>
-</ul>
-             </header>
 <section><h2>create new workshop</h2>
  </section>
 <main>

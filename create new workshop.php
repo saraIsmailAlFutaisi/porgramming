@@ -1,58 +1,6 @@
-<!DOCTYPE html>
-<head>
-  
-  <link rel="stylesheet" href="../program language/css/stylenew.css">
-  <link rel="stylesheet" href="css\stylenew.css">
-</head>
-<header>
-    <ul>
-      <li>
-        <!-- بداية معالجة جلسة المستخدم -->
-        <?php
-          session_start();
-          $id = $_SESSION['userid'];
-          // إذا لم يكن هناك بريد إلكتروني في الجلسة
-          if(empty($_SESSION['email']))
-          {
-            // عرض رابط تسجيل الدخول
-        ?>
-        <a href="../porgramming/login.php">login</a>
-        <?php
-          }
-          // إذا كان هناك بريد إلكتروني في الجلسة
-          else if(!empty($_SESSION['email']))
-          {
-            // عرض صورة المستخدم وبريده الإلكتروني
-        ?>
-        <strong><img alt="enterh.png" src="../porgramming\image\user (2).png"></strong>
-        <?php
-          echo $_SESSION['email'];
-          }
-        ?>
-        <!-- نهاية معالجة جلسة المستخدم -->
-      </li>
-   
-  <li> <a href="../porgramming/home page .php">Home</a></li>
-  <li><a href="">list of language</a></li>
-  <li class="dropdown">
-    <a href="" class="dropbtn">workshop</a>
-    <div class="dropdown-content">
-      <a href="../porgramming/workshop.php">create new workshop </a>
-      <a href="../porgramming/searchworkshop.php">search workshop</a>
-      <a href="">Link 3</a>
-    </div>
-  </li>
-      
-      </li>
-        <li><a href="">evaluation</a></li>
-        <li><a href="../porgramming/logout.php">logout</a></li>
-        <li><a href="">about us</a></li>
-</ul>
-  </header>
-<html>
 
   <?php
-
+ include'C:\xampp\htdocs\php\porgramming\interface.php';
   // كلاس ورشة عمل لديه وظيفة إنشاء ورشة العمل
   class WorkshopAnnouncement {
     private $id;
@@ -95,7 +43,7 @@
 
 
     //  لتخزين بيانات الورشة في قاعدة البيانات
-    public function Storeindatabase($id,  $language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic){
+    public function Storeindatabase($id,$language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic){
       $conn =  $this->connectToDatabase();
           $query1 = "INSERT INTO workshop(iduser,language,startTime,endTime,location,numberofseatsavailable,data,thetopic)VALUE ('$id',' $language','$startTime','$endTime','$location ','$seatsAvailable',' $date','$topic')";
           $result1 = $conn->query($query1);
@@ -159,9 +107,9 @@
   // بدء جلسة المستخدم
  
    // تحقق مل إذا كان المستخدم قد سجل الدخول
-  if (!empty($id)) {
+  if (!empty($_SESSION['userid'])) {
    
-
+   $id= $_SESSION['userid'];
     // التعامل مع البيانات المرسلة من خلال النموذج
     if (isset($_POST['save'])) {
       $language = $_POST['language'];
@@ -204,7 +152,7 @@ try {
     }
  } }else {
        // إذا لم يقم المستخدم بي تسجيل الدخول
-       header('REFRESH:5;URL=login.php');
+      header('REFRESH:5;URL=login.php');
       echo 'Please log in to the website first.';
     }
     
