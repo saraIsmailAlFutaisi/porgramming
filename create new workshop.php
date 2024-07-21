@@ -33,11 +33,11 @@
       if ($row) {
         
     // إذا وجد ورشة عمل لها نفس الوقت وتاريخ
-         return true;
+           return false;
       } else {
         
     // إذا لم يوجد ورشة عمل لها نفس الوقت وتاريخ
-        return false;
+    return true;
       }
     }
 
@@ -132,17 +132,18 @@
       );
       
       // التحقق من توفر وقت وتاريخ الورشة
-    //  إذا تحقق شرط ورجعت ترسلك لصفحة مره اخري لإعادة المحاولة
+    //  إذا لم توجد ورشة عمل بنفس الوقت وتاريخ
 
 try {
     if ($workshop->Checktheworkshoptimeanddata($startTime, $endTime, $date)) {
-        header('REFRESH:4;URL=workshop.php');
-        echo 'There is already a workshop scheduled at the same date and time. Please try again.';
-    } else {
-         //  إذا لم يتحقق شرط تخزن البيانات في قاعدة البيانات
+       
         $workshop->Storeindatabase($id,  $language,$startTime, $endTime, $date, $seatsAvailable, $location, $topic);
         header('REFRESH:4;URL=workshop.php');
-        echo 'The workshop has been created successfully.';
+        echo 'c';
+    } else {
+       // إذا وجدت ورشة عمل بنفس الوقت وتاريخ يرجع بيfals
+      header('REFRESH:4;URL=workshop.php');
+      echo 'There is already a workshop scheduled at the same date and time. Please try again.';
     }
 } catch (Exception $e) {
     // في حالة حدوث أي استثناء، قم بإظهار رسالة الخطأ

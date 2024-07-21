@@ -70,31 +70,15 @@ class showregistrationworkshop
                     <td><?php echo $data['data']; ?></td>
                     
                     <td>
-                        <?php
-                        // إذا تم الضغط على زر التأكيد
-                        if (isset($_POST['confirm_'.$data['workid']])) { 
-                            // إذا كان الحالة الحالية "maybe"
-                            if ($data['confirmation'] == 'maybe') {
-                                $RESLT1 = 'Confirmation';
-                                $workshopId = $data['workid'];
-                                $userId = $data['userid'];
-                                $conn = $this->connectToDatabase();
-                                $query2 = "UPDATE registrationworkshop SET confirmation = '$RESLT1' WHERE workid = '$workshopId' AND iduser = '$userId'";
-                                $result2 = $conn->query($query2);
-                                if ($result2) {
-                                    echo "Confirmation status updated successfully.";
-                                } else {
-                                    echo "Error updating confirmation status: " . $conn->error;
-                                }
-                            }
-                        }
-                        ?>
+                    <button>confirmationstatus</button>
                     </td>
                 </tr>
                 <?php
             }
             echo '</table>';
-        } else {
+        } 
+        
+        else {
             echo "<p>No workshops found.</p>";
         }
 

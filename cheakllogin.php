@@ -84,21 +84,25 @@ class User {
             $checkQuery = "SELECT * FROM user WHERE email = '$email'";
             $result = $conn->query($checkQuery);
             if ($result->num_rows > 0) {
-                throw new Exception("خطأ: البريد الإلكتروني مسجل بالفعل. حاول باستخدام بريد إلكتروني مختلف.");
+               
+             throw new Exception("خطأ: البريد الإلكتروني مسجل بالفعل. حاول باستخدام بريد إلكتروني مختلف.");
+            
             }
-    
+             
             // تحقق من تطابق كلمة المرور وتأكيدها
             if ($password !== $confirmPassword) {
                 throw new Exception("خطأ: كلمة المرور وتأكيد كلمة المرور غير متطابقتين.");
+                
             }
-    
+           
             // استعلام SQL لإدخال المستخدم الجديد
-            $query = "INSERT INTO user (firstname, lastname, email, phonenumber, password) VALUES ($firstname, $lastname, $email, $phone, $password)";
-            $stmt = $conn->prepare($query);
+            $query = "INSERT INTO user (firstname, lastname, email, phonenumber, password) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sssss", $firstname, $lastname, $email, $phone, $password);
           
             if ($stmt->execute()) {
                 // إرجاع معرف المستخدم الجديد
-                return $conn->insert_id;
+                return true;
             } else {
                 throw new Exception("خطأ: " . $query . "<br>" . $conn->error);
             }
@@ -110,6 +114,7 @@ class User {
             // إغلاق اتصال قاعدة البيانات
          
         }
+        
     }
     
     // دوال المساعدة للحصول على معلومات المستخدم
@@ -148,16 +153,18 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
  $confirmPassword = $_POST['confirm'];
     $userregister = new User($firstname, $lastname, $email, $phone, $password, $confirmPassword);
-    $userId = $userregister->register($firstname, $lastname, $email, $phone, $password, $confirmPassword);
+    $userregister->register($firstname, $lastname, $email, $phone, $password, $confirmPassword);
 
-    if ($userId) {
+    if ( $userregister->register($firstname, $lastname, $email, $phone, $password, $confirmPassword)    ) {
         // If the registration is successful, redirect the user to the login page
-        header('REFRESH:4;URL=login.php');
+         
         echo 'Registration successful! Please log in.';
+        header('REFRESH:4;URL=login.php');
     } else {
         // If the registration fails, display an error message
         echo 'Registration failed. Please try again.';
         header('REFRESH:4;URL=sinup.php');
+        
     }
 }
 ?>
